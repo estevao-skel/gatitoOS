@@ -1,0 +1,209 @@
+gatito os v3.0
+a 32-bit x86 operating system kernel written in assembly
+overview
+gatito os is a minimal operating system that boots directly into protected mode and provides a graphical user interface with multiple applications. it runs on x86 architecture and uses vga mode 13h (320x200, 256 colors) for graphics.
+features
+core system
+
+32-bit protected mode kernel
+interrupt handling with custom idt
+ps/2 keyboard and mouse support
+vga graphics (320x200, 256 colors)
+simple filesystem (64 files max)
+clipboard system (copy/paste support)
+screenshot capture functionality
+modular architecture with loadable modules
+package management system (dralar)
+
+applications
+notepad - text editor with basic editing features
+
+keyboard shortcuts: ctrl+a (select all), ctrl+c (copy), ctrl+v (paste), ctrl+s (save)
+cursor navigation with arrow keys
+
+terminal - command line interface
+
+available commands:
+
+help - show available commands
+clear - clear screen
+info - system information
+ls - list files
+echo <text> - print text
+dralar install <package> - install package
+run <app> - run application
+power <mode> - power management (gelado/desempenho/status)
+module load/unload/list - module management
+taskmgr - open task manager
+
+
+
+file explorer - browse and manage files
+
+navigate with arrow keys
+press enter to open file
+press 'd' to delete file
+press 'n' to create new file
+supports up to 64 files
+
+image viewer - display images and screenshots
+
+press 'p' to set current image as wallpaper
+can view screenshots taken with f12
+
+paint - simple drawing application
+
+7 color palette (red, green, yellow, blue, dark red, black, cyan)
+draw with spacebar
+move cursor with arrow keys
+press 'c' to clear canvas
+available only after installing paint package
+
+task manager - system monitor
+
+displays cpu frequency
+memory usage statistics
+process count
+package and module information
+auto-refresh mode (toggle with 'a')
+manual refresh with 'r'
+
+package system (dralar)
+install additional functionality:
+
+paint - drawing application
+network - network module (tcp/ip)
+
+usage: dralar install <package_name>
+module system
+loadable modules for extended functionality:
+
+viewer - image viewer (loaded by default)
+taskmgr - task manager
+
+usage:
+
+module load <module_name>
+module unload <module_name>
+module list
+
+power management
+three power modes:
+
+normal - balanced performance
+gelado - extreme power saving (low cpu frequency, high loop delay)
+desempenho - maximum performance (high cpu frequency, minimal loop delay)
+
+usage: power <gelado/desempenho/status>
+keyboard shortcuts
+global
+
+f12 - take screenshot
+win key - open/close start menu
+esc - return to desktop
+n - open notepad (from desktop)
+t - open terminal (from desktop)
+e - open file explorer (from desktop)
+v - open image viewer (from desktop)
+
+clipboard
+
+ctrl+a - select all
+ctrl+c - copy
+ctrl+v - paste
+ctrl+s - save file (notepad)
+
+navigation
+
+arrow keys - navigate/move cursor
+enter - confirm/execute
+space - draw pixel (paint) / space character (text editors)
+
+memory layout
+0x10000  - kernel code start
+0x20000  - image load address
+0x30000  - screenshot buffer
+0x40000  - filesystem base
+0x50000  - vram backup
+0x60000  - package base
+0x70000  - module base
+0x80000  - heap pointer start
+0x90000  - stack pointer
+0xA0000  - vga memory
+
+technical details
+screen modes
+
+desktop (0)
+notepad (1)
+terminal (2)
+explorer (3)
+viewer (4)
+paint (5)
+start menu (6)
+task manager (7)
+
+filesystem
+
+max files: 64
+filename length: 12 characters
+file content: 256 bytes
+total entry size: 268 bytes
+
+graphics
+
+resolution: 320x200 pixels
+color depth: 8-bit (256 colors)
+vga mode: 13h
+custom 8x8 bitmap font
+
+interrupts
+
+keyboard: irq 1 (int 0x21)
+mouse: irq 12 (int 0x2c)
+pic remapped to 0x20-0x27 and 0x28-0x2f
+
+building and running
+this kernel expects to be loaded at address 0x10000 in protected mode. you'll need:
+
+an x86 assembler (nasm recommended)
+a bootloader to load the kernel
+qemu or real hardware for testing
+
+assemble with: nasm -f bin kernel.asm -o kernel.bin
+
+default files
+the system comes with these pre-created files:
+
+readme.txt - welcome message
+hello.txt - hello world message
+system.ini - system version info
+notes.txt - package information
+info.txt - package manager info
+
+limitations
+
+no multitasking
+no network stack (network module is placeholder)
+simple filesystem with no persistence
+fixed 320x200 resolution
+limited to 64 files
+no dynamic memory allocation
+text buffer sizes are fixed
+
+architecture
+the kernel uses a modular design with separate handlers for:
+
+graphics primitives (pixels, rectangles, fonts)
+input devices (keyboard, mouse)
+applications (notepad, terminal, etc)
+system services (clipboard, screenshots, file management)
+power management (cpu frequency scaling)
+
+notes
+
+all text is in portuguese (brazilian)
+color scheme uses vga palette
+mouse cursor is drawn as a simple triangle
+screenshots are stored in memory only
+wallpaper feature loads from image buffer
